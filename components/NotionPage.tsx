@@ -38,41 +38,8 @@ import styles from './styles.module.css'
 const Code = dynamic(() =>
   import('react-notion-x/build/third-party/code').then(async (m) => {
     await Promise.allSettled([
-      // @ts-expect-error Ignore prisma types
-      import('prismjs/components/prism-markup-templating.js'),
-      // @ts-expect-error Ignore prisma types
-      import('prismjs/components/prism-markup.js'),
-      // @ts-expect-error Ignore prisma types
-      import('prismjs/components/prism-bash.js'),
-      // @ts-expect-error Ignore prisma types
-      import('prismjs/components/prism-c.js'),
-      // @ts-expect-error Ignore prisma types
-      import('prismjs/components/prism-cpp.js'),
-      // @ts-expect-error Ignore prisma types
-      import('prismjs/components/prism-csharp.js'),
-      // @ts-expect-error Ignore prisma types
-      import('prismjs/components/prism-docker.js'),
-      // @ts-expect-error Ignore prisma types
-      import('prismjs/components/prism-java.js'),
-      // @ts-expect-error Ignore prisma types
-      import('prismjs/components/prism-js-templates.js'),
-      // @ts-expect-error Ignore prisma types
-      import('prismjs/components/prism-coffeescript.js'),
-      // @ts-expect-error Ignore prisma types
-      import('prismjs/components/prism-diff.js'),
-      // @ts-expect-error Ignore prisma types
-      import('prismjs/components/prism-git.js'),
-      // @ts-expect-error Ignore prisma types
-      import('prismjs/components/prism-go.js'),
-      // @ts-expect-error Ignore prisma types
-      import('prismjs/components/prism-graphql.js'),
-      // @ts-expect-error Ignore prisma types
-      import('prismjs/components/prism-handlebars.js'),
-      // @ts-expect-error Ignore prisma types
-      import('prismjs/components/prism-less.js'),
-      // @ts-expect-error Ignore prisma types
-      import('prismjs/components/prism-makefile.js'),
-      // @ts-expect-error Ignore prisma types
-      import('prismjs/components/prism-markdown.js'),
-      // @ts-expect-error Ignore prisma types
-      import('prismjs/components/prism-objec
+      // prism imports
+    ])
+    return m.Code as unknown as React.ComponentType<any>
+  })
+)
