@@ -6,6 +6,7 @@ import { useRouter } from 'next/router'
 import { type PageBlock } from 'notion-types'
 import { formatDate, getBlockTitle, getPageProperty } from 'notion-utils'
 import * as React from 'react'
+import { ReactNode } from 'react'
 import BodyClassName from 'react-body-classname'
 import {
   type NotionComponents,
@@ -311,7 +312,7 @@ export function NotionPage({
   darkMode={isDarkMode}
   components={{
     ...components,
-    PageLink: ({ children }) => <span>{children}</span> // disables clickable titles
+PageLink: ({ children }: { children: ReactNode }) => <span>{children}</span>
   }}
   recordMap={recordMap}
   rootPageId={site.rootNotionPageId}
