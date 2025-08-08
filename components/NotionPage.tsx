@@ -1,4 +1,3 @@
-// ===== imports (TOP OF FILE ONLY) =====
 import cs from 'classnames'
 import dynamic from 'next/dynamic'
 import Image from 'next/legacy/image'
@@ -8,7 +7,11 @@ import { type PageBlock } from 'notion-types'
 import { formatDate, getBlockTitle, getPageProperty } from 'notion-utils'
 import * as React from 'react'
 import BodyClassName from 'react-body-classname'
-import { type NotionComponents, NotionRenderer, useNotionContext } from 'react-notion-x'
+import {
+  type NotionComponents,
+  NotionRenderer,
+  useNotionContext
+} from 'react-notion-x'
 import { EmbeddedTweet, TweetNotFound, TweetSkeleton } from 'react-tweet'
 import { useSearchParam } from 'react-use'
 
@@ -28,10 +31,14 @@ import { PageAside } from './PageAside'
 import { PageHead } from './PageHead'
 import styles from './styles.module.css'
 
-// ===== dynamic() and helpers =====
+// -----------------------------------------------------------------------------
+// dynamic imports for optional components
+// -----------------------------------------------------------------------------
+
 const Code = dynamic(() =>
   import('react-notion-x/build/third-party/code').then(async (m) => {
     await Promise.allSettled([
+      // prism syntaxes (types declared via global.d.ts)
       import('prismjs/components/prism-markup-templating.js'),
       import('prismjs/components/prism-markup.js'),
       import('prismjs/components/prism-bash.js'),
@@ -69,7 +76,9 @@ const Code = dynamic(() =>
 )
 
 const Collection = dynamic(() =>
-  import('react-notion-x/build/third-party/collection').then((m) => m.Collection)
+  import('react-notion-x/build/third-party/collection').then(
+    (m) => m.Collection
+  )
 )
 const Equation = dynamic(() =>
   import('react-notion-x/build/third-party/equation').then((m) => m.Equation)
@@ -90,6 +99,7 @@ const Modal = dynamic(
 function Tweet({ id }: { id: string }) {
   const { recordMap } = useNotionContext()
   const tweet = (recordMap as types.ExtendedTweetRecordMap)?.tweets?.[id]
+
   return (
     <React.Suspense fallback={<TweetSkeleton />}>
       {tweet ? <EmbeddedTweet tweet={tweet} /> : <TweetNotFound />}
@@ -97,19 +107,158 @@ function Tweet({ id }: { id: string }) {
   )
 }
 
-// … your property* helper functions here …
+const propertyLastEditedTimeValue = (
+  { block, pageHeader }: any,
+  defaultFn: () => React.ReactNode
+) => {
+  if (pageHeader && block?.last_edited_time) {
+    return `Last updated ${formatDate(block?.last_edited_time, {
+      month: 'long'
+    })}`
+  }
+  return defaultFn()
+}
 
-// ===== component (AFTER imports & helpers) =====
-function NotionPage({ site, recordMap, error, pageId }: types.PageProps) {
-  // … your existing component body unchanged …
+const propertyDateValue = (
+  { data, schema, pageHeader }: any,
+  defaultFn: () => React.ReactNode
+) => {
+  if (pageHeader && schema?.name?.toLowerCase() === 'published') {
+    const publishDate = data?.[0]?.[1]?.[0]?.[1]?.start_date
+    if (publishDate) {
+      return `${formatDate(publishDate, { month: 'long' })}`
+    }
+  }
+  return defaultFn()
+}
+
+const propertyTextValue = (
+  { schema, pageHeader }: any,
+  defaultFn: () => React.ReactNode
+) => {
+  if (pageHeader && schema?.name?.toLowerCase() === 'author') {
+    return <b>{defaultFn()}</b>
+  }
+  return defaultFn()
+}
+
+export function NotionPage({
+  site,
+  recordMap,
+  error,
+  pageId
+}: types.PageProps) {
+  const router = useRouter()
+  const lite = useSearchParam('lite')
+
+  const components = React.useMemo<Partial<NotionComponents>>(
+    () => ({
+      nextLegacyImage: Image,
+      nextLink: Link,
+      Code,
+      Collection,
+      Equation,
+      Pdf,
+      Modal,
+      Tweet,
+      Header: NotionPageHeader,
+      propertyLastEditedTimeValue,
+      propertyTextValue,
+      propertyDateValue
+    }),
+    []
+  )
+
+  // lite mode is for oembed
+  const isLiteMode = lite === 'true'
+
+  const { isDarkMode } = useDarkMode()
+
+  const siteMapPageUrl = React.useMemo(() => {
+    const params: any = {}
+    if (lite) params.lite = lite
+    const searchParams = new URLSearchParams(params)
+    return site ? mapPageUrl(site, recordMap!, searchParams) : undefined
+  }, [site, recordMap, lite])
+
+  const keys = Object.keys(recordMap?.block || {})
+  const block = recordMap?.block?.[keys[0]!]?.value
+
+  const isBlogPost =
+    block?.type === 'page' && block?.parent_table === 'collection'
+
+  const showTableOfContents = !!isBlogPost
+  const minTableOfContentsItems = 3
+
+  const pageAside = React.useMemo(
+    () => (
+      <PageAside
+        block={block!}
+        recordMap={recordMap!}
+        isBlogPost={isBlogPost}
+      />
+    ),
+    [block, recordMap, isBlogPost]
+  )
+
+  const footer = React.useMemo(() => <Footer />, [])
+
+  if (router.isFallback) {
+    return <Loading />
+  }
+
+  // Guard: bail out if required data is missing
+  if (error || !site || !block) {
+    return <Page404 site={site} pageId={pageId} error={error} />
+  }
+
+  // After the guard, `site` exists; alias for JSX to satisfy TS
+  const s = site!
+
+  const title = getBlockTitle(block, recordMap) || s.name
+
+  if (!config.isServer) {
+    // add important objects to the window global for easy debugging
+    const g = window as any
+    g.pageId = pageId
+    g.recordMap = recordMap
+    g.block = block
+  }
+
+  const canonicalPageUrl = config.isDev
+    ? undefined
+    : getCanonicalPageUrl(s, recordMap)(pageId)
+
+  const socialImage = mapImageUrl(
+    getPageProperty<string>('Social Image', block, recordMap) ||
+      (block as PageBlock).format?.page_cover ||
+      config.defaultPageCover,
+    block
+  )
+
+  const socialDescription =
+    getPageProperty<string>('Description', block, recordMap) ||
+    config.description
 
   return (
     <>
-      {/* PageHead, BodyClassName, etc. */}
+      <PageHead
+        pageId={pageId}
+        site={s}
+        title={title}
+        description={socialDescription}
+        image={socialImage}
+        url={canonicalPageUrl}
+        isBlogPost={isBlogPost}
+      />
+
+      {isLiteMode && <BodyClassName className='notion-lite' />}
+      {isDarkMode && <BodyClassName className='dark-mode' />}
+
       <NotionRenderer
         bodyClassName={cs(
           styles.notion,
-          pageId === site.rootNotionPageId && 'index-page'
+          pageId === s.rootNotionPageId && 'index-page'
         )}
         darkMode={isDarkMode}
         components={{
@@ -123,8 +272,8 @@ function NotionPage({ site, recordMap, error, pageId }: types.PageProps) {
           )
         }}
         recordMap={recordMap}
-        rootPageId={site.rootNotionPageId}
-        rootDomain={site.domain}
+        rootPageId={s.rootNotionPageId}
+        rootDomain={s.domain}
         fullPage={!isLiteMode}
         previewImages={!!recordMap.preview_images}
         showCollectionViewDropdown={false}
@@ -139,11 +288,11 @@ function NotionPage({ site, recordMap, error, pageId }: types.PageProps) {
         pageAside={pageAside}
         footer={footer}
       />
+
       <GitHubShareButton />
     </>
   )
 }
 
-// ===== exports (BOTTOM) =====
 export { NotionPage }
 export default NotionPage
