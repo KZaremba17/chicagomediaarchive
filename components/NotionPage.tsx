@@ -43,3 +43,5 @@ const Code = dynamic(() =>
     return m.Code as unknown as React.ComponentType<any>
   })
 )
+export { NotionPage };
+export default NotionPage;
