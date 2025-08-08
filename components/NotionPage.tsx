@@ -1,3 +1,4 @@
+function NotionPage({ site, recordMap, error, pageId }: types.PageProps) {
 import cs from 'classnames'
 import dynamic from 'next/dynamic'
 import Image from 'next/legacy/image'
