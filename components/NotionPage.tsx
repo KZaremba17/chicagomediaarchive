@@ -294,5 +294,4 @@ export function NotionPage({
   )
 }
 
-export { NotionPage }
 export default NotionPage
