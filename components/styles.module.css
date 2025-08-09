@@ -219,3 +219,19 @@
 .hidden {
   visibility: hidden;
 }
+/* Disable clicks on internal page title links inside collection cards only */
+.notion-collection .notion-gallery .notion-page-link,
+.notion-collection .notion-list .notion-page-link,
+.notion-collection .notion-table .notion-page-link {
+  pointer-events: none;
+  cursor: default;
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Optional: keep the title looking unlinked even on hover */
+.notion-collection .notion-gallery .notion-page-link:hover,
+.notion-collection .notion-list .notion-page-link:hover,
+.notion-collection .notion-table .notion-page-link:hover {
+  text-decoration: none;
+}
