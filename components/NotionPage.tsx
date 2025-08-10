@@ -263,13 +263,6 @@ export function NotionPage({
         darkMode={isDarkMode}
         components={{
           ...components,
-          // Render title text without making it clickable
-          PageLink: ({ children }: { children: React.ReactNode }) => (
-            <>
-              {/* disables clickable internal page links */}
-              <span>{children}</span>
-            </>
-          )
         }}
         recordMap={recordMap}
         rootPageId={s.rootNotionPageId}

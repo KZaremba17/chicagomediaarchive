@@ -219,7 +219,14 @@
 .hidden {
   visibility: hidden;
 }
-/* Disable clicks on internal page title links inside collection cards only */
+/* Re-enable internal links by default (safety belt) */
+.notion-page-link {
+  pointer-events: auto;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+/* Disable clicks ONLY inside collection cards (Gallery/List/Table) */
 .notion-collection .notion-gallery .notion-page-link,
 .notion-collection .notion-list .notion-page-link,
 .notion-collection .notion-table .notion-page-link {
@@ -229,7 +236,7 @@
   color: inherit;
 }
 
-/* Optional: keep the title looking unlinked even on hover */
+/* Optional: keep titles looking unlinked on hover inside cards */
 .notion-collection .notion-gallery .notion-page-link:hover,
 .notion-collection .notion-list .notion-page-link:hover,
 .notion-collection .notion-table .notion-page-link:hover {
