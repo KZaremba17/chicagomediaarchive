@@ -211,7 +211,44 @@ export function NotionPage({
   if (error || !site || !block) {
     return <Page404 site={site} pageId={pageId} error={error} />
   }
+// Disable clicks on internal links inside collection cards (gallery/list/table),
+// but keep external links (e.g., Amazon) working.
+React.useEffect(() => {
+  const onClick = (e: MouseEvent) => {
+    const target = e.target as HTMLElement | null
+    if (!target) return
 
+    // Only act if the click happened inside a collection card
+    const card = target.closest('.notion-collection-card')
+    if (!card) return
+
+    // Find the nearest anchor that was clicked
+    const anchor = target.closest('a') as HTMLAnchorElement | null
+    if (!anchor) return
+
+    const href = anchor.getAttribute('href') || ''
+
+    // Treat these as INTERNAL (block them):
+    //  - Notion/react-notion-x page links have class "notion-page-link"
+    //  - relative links (start with "/")
+    //  - absolute links to your own domain or Notion domains
+    const isInternal =
+      anchor.classList.contains('notion-page-link') ||
+      href.startsWith('/') ||
+      href.includes('notion.so') ||
+      href.includes('notion.site') ||
+      href.includes(window.location.hostname)
+
+    if (isInternal) {
+      e.preventDefault()
+      e.stopPropagation()
+    }
+  }
+
+  // capture = true so we intercept before framework handlers
+  document.addEventListener('click', onClick, true)
+  return () => document.removeEventListener('click', onClick, true)
+}, [pageId])
   // After the guard, `site` exists; alias for JSX to satisfy TS
   const s = site!
 
