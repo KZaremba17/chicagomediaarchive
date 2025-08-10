@@ -219,26 +219,32 @@
 .hidden {
   visibility: hidden;
 }
-/* Re-enable internal links by default (safety belt) */
-.notion-page-link {
-  pointer-events: auto;
-  cursor: pointer;
-  text-decoration: underline;
-}
-
-/* Disable clicks ONLY inside collection cards (Gallery/List/Table) */
-.notion-collection .notion-gallery .notion-page-link,
-.notion-collection .notion-list .notion-page-link,
-.notion-collection .notion-table .notion-page-link {
+/* 1) Make all internal page links inside collection cards unclickable */
+.notion-collection .notion-gallery .notion-collection-card a.notion-page-link,
+.notion-collection .notion-list    .notion-collection-card a.notion-page-link,
+.notion-collection .notion-table   .notion-collection-card a.notion-page-link {
   pointer-events: none;
   cursor: default;
   text-decoration: none;
   color: inherit;
 }
 
-/* Optional: keep titles looking unlinked on hover inside cards */
-.notion-collection .notion-gallery .notion-page-link:hover,
-.notion-collection .notion-list .notion-page-link:hover,
-.notion-collection .notion-table .notion-page-link:hover {
+/* 2) Keep external links inside cards clickable (e.g., Amazon) */
+.notion-collection .notion-collection-card a.notion-link {
+  pointer-events: auto;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+/* Optional belt-and-suspenders:
+   Disable any link inside a card whose href looks internal (starts with "/"),
+   then re-enable absolute http(s) links. */
+.notion-collection .notion-collection-card a[href^="/"] {
+  pointer-events: none;
+  cursor: default;
   text-decoration: none;
+}
+.notion-collection .notion-collection-card a[href^="http"] {
+  pointer-events: auto;
+  cursor: pointer;
 }
