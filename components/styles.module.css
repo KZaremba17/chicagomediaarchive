@@ -260,3 +260,22 @@
 .notion-collection .notion-collection-card a[href^="http"] {
   pointer-events: auto;
 }
+/* Kill ONLY internal links inside gallery cards (covers whole-card links + titles) */
+.notion-collection.notion-gallery .notion-collection-card a.notion-page-link,
+.notion-collection.notion-gallery .notion-collection-card > a.notion-page-link,
+.notion-collection.notion-gallery .notion-collection-card a[href^="/"],
+.notion-collection.notion-gallery .notion-collection-card a[href^="https://www.notion.so"],
+.notion-collection.notion-gallery .notion-collection-card a[href^="https://notion.site"],
+.notion-collection.notion-gallery .notion-collection-card a[href^="https://chicagomediaarchive.com"] {
+  pointer-events: none !important;
+  cursor: default !important;
+  text-decoration: none !important;
+  color: inherit !important;
+}
+
+/* Re-enable external links inside gallery cards (e.g., Amazon) */
+.notion-collection.notion-gallery .notion-collection-card a[href^="http"]:not([href*="notion.so"]):not([href*="notion.site"]):not([href*="chicagomediaarchive.com"]) {
+  pointer-events: auto !important;
+  cursor: pointer !important;
+  text-decoration: underline;
+}
