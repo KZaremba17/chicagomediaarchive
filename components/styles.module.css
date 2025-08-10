@@ -248,3 +248,15 @@
   pointer-events: auto;
   cursor: pointer;
 }
+/* Disable clicking the entire card */
+.notion-collection .notion-gallery .notion-collection-card,
+.notion-collection .notion-list    .notion-collection-card,
+.notion-collection .notion-table   .notion-collection-card {
+  pointer-events: none;
+}
+
+/* Re-enable clicks for external links inside the card */
+.notion-collection .notion-collection-card a.notion-link,
+.notion-collection .notion-collection-card a[href^="http"] {
+  pointer-events: auto;
+}
