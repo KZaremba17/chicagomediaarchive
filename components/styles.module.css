@@ -213,7 +213,7 @@
 
   /* Roomier gallery columns + spacing */
   .notion :global(.notion-gallery-view .notion-gallery-grid) {
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)) !important;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)) !important;
     gap: 32px !important; /* was 24px */
   }
 }
