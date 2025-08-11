@@ -38,7 +38,7 @@ import styles from './styles.module.css'
 const Code = dynamic(() =>
   import('react-notion-x/build/third-party/code').then(async (m) => {
     await Promise.allSettled([
-      // prism syntaxes (types declared via global.d.ts)
+      // prism syntaxes (declared in global.d.ts)
       import('prismjs/components/prism-markup-templating.js'),
       import('prismjs/components/prism-markup.js'),
       import('prismjs/components/prism-bash.js'),
@@ -142,7 +142,7 @@ const propertyTextValue = (
   return defaultFn()
 }
 
-export function NotionPage({
+function NotionPage({
   site,
   recordMap,
   error,
@@ -150,6 +150,7 @@ export function NotionPage({
 }: types.PageProps) {
   const router = useRouter()
   const lite = useSearchParam('lite')
+  const { isDarkMode } = useDarkMode()
 
   const components = React.useMemo<Partial<NotionComponents>>(
     () => ({
@@ -169,10 +170,38 @@ export function NotionPage({
     []
   )
 
+  // 👉 Block only INTERNAL clicks inside collection cards (gallery entries)
+  React.useEffect(() => {
+    const onClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement | null
+      if (!target) return
+
+      const card = target.closest('.notion-collection-card')
+      if (!card) return
+
+      const anchor = target.closest('a') as HTMLAnchorElement | null
+      if (!anchor) return
+
+      const href = anchor.getAttribute('href') || ''
+      const isInternal =
+        anchor.classList.contains('notion-page-link') ||
+        href.startsWith('/') ||
+        href.includes('notion.so') ||
+        href.includes('notion.site') ||
+        href.includes(window.location.hostname)
+
+      if (isInternal) {
+        e.preventDefault()
+        e.stopPropagation()
+      }
+    }
+
+    document.addEventListener('click', onClick, true)
+    return () => document.removeEventListener('click', onClick, true)
+  }, [pageId])
+
   // lite mode is for oembed
   const isLiteMode = lite === 'true'
-
-  const { isDarkMode } = useDarkMode()
 
   const siteMapPageUrl = React.useMemo(() => {
     const params: any = {}
@@ -207,55 +236,14 @@ export function NotionPage({
     return <Loading />
   }
 
-  // Guard: bail out if required data is missing
   if (error || !site || !block) {
     return <Page404 site={site} pageId={pageId} error={error} />
   }
-// Disable clicks on internal links inside collection cards (gallery/list/table),
-// but keep external links (e.g., Amazon) working.
-React.useEffect(() => {
-  const onClick = (e: MouseEvent) => {
-    const target = e.target as HTMLElement | null
-    if (!target) return
 
-    // Only act if the click happened inside a collection card
-    const card = target.closest('.notion-collection-card')
-    if (!card) return
-
-    // Find the nearest anchor that was clicked
-    const anchor = target.closest('a') as HTMLAnchorElement | null
-    if (!anchor) return
-
-    const href = anchor.getAttribute('href') || ''
-
-    // Treat these as INTERNAL (block them):
-    //  - Notion/react-notion-x page links have class "notion-page-link"
-    //  - relative links (start with "/")
-    //  - absolute links to your own domain or Notion domains
-    const isInternal =
-      anchor.classList.contains('notion-page-link') ||
-      href.startsWith('/') ||
-      href.includes('notion.so') ||
-      href.includes('notion.site') ||
-      href.includes(window.location.hostname)
-
-    if (isInternal) {
-      e.preventDefault()
-      e.stopPropagation()
-    }
-  }
-
-  // capture = true so we intercept before framework handlers
-  document.addEventListener('click', onClick, true)
-  return () => document.removeEventListener('click', onClick, true)
-}, [pageId])
-  // After the guard, `site` exists; alias for JSX to satisfy TS
-  const s = site!
-
+  const s = site! // after the guard, site is defined
   const title = getBlockTitle(block, recordMap) || s.name
 
   if (!config.isServer) {
-    // add important objects to the window global for easy debugging
     const g = window as any
     g.pageId = pageId
     g.recordMap = recordMap
@@ -299,7 +287,8 @@ React.useEffect(() => {
         )}
         darkMode={isDarkMode}
         components={{
-          ...components,
+          ...components
+          // NOTE: no PageLink override here; JS effect handles only card titles
         }}
         recordMap={recordMap}
         rootPageId={s.rootNotionPageId}
@@ -324,4 +313,5 @@ React.useEffect(() => {
   )
 }
 
+export { NotionPage }
 export default NotionPage
