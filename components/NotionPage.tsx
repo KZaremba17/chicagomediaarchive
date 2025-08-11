@@ -140,28 +140,28 @@ const propertyTextValue = (
   return defaultFn()
 }
 
-/**
- * Strongly-typed PageLink override
- * - For collection (gallery) card titles, render a <span> (no anchor), removing hover URL.
- * - Elsewhere, use Next.js <Link> as usual.
- */
+// ----------------------------------------------------------
+// PageLink override: remove anchors from gallery titles & covers
+// ----------------------------------------------------------
 type PageLinkOverrideProps = {
   href?: string
   className?: string
   children?: React.ReactNode
 } & React.AnchorHTMLAttributes<HTMLAnchorElement>
 
-const PageLink = ({
+function PageLink({
   href,
   className,
   children,
   ...props
-}: PageLinkOverrideProps) => {
-  const isCollectionCardTitle =
+}: PageLinkOverrideProps) {
+  // Treat any anchor used within collection cards (title or cover) as non-link
+  const isCollectionCardElement =
     className?.includes('notion-collection-card-title') ||
+    className?.includes('notion-collection-card-cover') ||
     className?.includes('notion-collection-card')
 
-  if (isCollectionCardTitle) {
+  if (isCollectionCardElement) {
     return (
       <span
         className={
@@ -169,13 +169,13 @@ const PageLink = ({
             ? className.replace(/\bnotion-page-link\b/, '').trim()
             : undefined
         }
-        {...props}
       >
         {children}
       </span>
     )
   }
 
+  // Default behavior elsewhere
   return (
     <Link href={href ?? '#'} className={className} {...(props as any)}>
       {children}
@@ -183,6 +183,9 @@ const PageLink = ({
   )
 }
 
+// ----------------------------------------------------------
+// NotionPage component
+// ----------------------------------------------------------
 function NotionPage({
   site,
   recordMap,
@@ -298,7 +301,7 @@ function NotionPage({
         darkMode={isDarkMode}
         components={{
           ...components
-          // NOTE: PageLink override disables gallery card title anchors
+          // NOTE: PageLink override disables gallery title & cover anchors
         }}
         recordMap={recordMap}
         rootPageId={s.rootNotionPageId}
