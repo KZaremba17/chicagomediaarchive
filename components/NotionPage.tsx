@@ -125,9 +125,7 @@ const propertyDateValue = (
 ) => {
   if (pageHeader && schema?.name?.toLowerCase() === 'published') {
     const publishDate = data?.[0]?.[1]?.[0]?.[1]?.start_date
-    if (publishDate) {
-      return `${formatDate(publishDate, { month: 'long' })}`
-    }
+    if (publishDate) return `${formatDate(publishDate, { month: 'long' })}`
   }
   return defaultFn()
 }
@@ -143,21 +141,25 @@ const propertyTextValue = (
 }
 
 /**
- * Override PageLink:
- * - For collection (gallery) card titles, render a <span> (no anchor),
- *   so there is no hover URL or click navigation.
+ * Strongly-typed PageLink override
+ * - For collection (gallery) card titles, render a <span> (no anchor), removing hover URL.
  * - Elsewhere, use Next.js <Link> as usual.
  */
-const PageLink: NotionComponents['PageLink'] = ({
+type PageLinkOverrideProps = {
+  href?: string
+  className?: string
+  children?: React.ReactNode
+} & React.AnchorHTMLAttributes<HTMLAnchorElement>
+
+const PageLink = ({
   href,
   className,
   children,
   ...props
-}) => {
-  // react-notion-x adds these classes around card title anchors
+}: PageLinkOverrideProps) => {
   const isCollectionCardTitle =
     className?.includes('notion-collection-card-title') ||
-    className?.includes('notion-collection-card') // extra safeguard
+    className?.includes('notion-collection-card')
 
   if (isCollectionCardTitle) {
     return (
@@ -174,7 +176,6 @@ const PageLink: NotionComponents['PageLink'] = ({
     )
   }
 
-  // Default behavior for all other links
   return (
     <Link href={href ?? '#'} className={className} {...(props as any)}>
       {children}
@@ -206,7 +207,7 @@ function NotionPage({
       propertyLastEditedTimeValue,
       propertyTextValue,
       propertyDateValue,
-      PageLink // 👈 inject the override
+      PageLink // ← inject override
     }),
     []
   )
@@ -243,15 +244,13 @@ function NotionPage({
 
   const footer = React.useMemo(() => <Footer />, [])
 
-  if (router.isFallback) {
-    return <Loading />
-  }
+  if (router.isFallback) return <Loading />
 
   if (error || !site || !block) {
     return <Page404 site={site} pageId={pageId} error={error} />
   }
 
-  const s = site! // after the guard, site is defined
+  const s = site!
   const title = getBlockTitle(block, recordMap) || s.name
 
   if (!config.isServer) {
