@@ -205,3 +205,22 @@
     grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
   }
 }
+/* Widen the page content area on desktop so the gallery can breathe */
+@media (min-width: 1024px) {
+  .notion :global(.notion-page-content) {
+    max-width: min(1280px, 96vw) !important; /* was ~700–900px */
+  }
+
+  /* Roomier gallery columns + spacing */
+  .notion :global(.notion-gallery-view .notion-gallery-grid) {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)) !important;
+    gap: 32px !important; /* was 24px */
+  }
+}
+
+/* Ultra-wide screens: give it a little more */
+@media (min-width: 1536px) {
+  .notion :global(.notion-page-content) {
+    max-width: min(1400px, 92vw) !important;
+  }
+}
