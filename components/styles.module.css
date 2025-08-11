@@ -224,3 +224,30 @@
     max-width: min(1400px, 92vw) !important;
   }
 }
+/* Wider content area so another column can fit */
+@media (min-width: 1200px) {
+  .notion :global(.notion-page-content) {
+    /* expand the central column but keep nice gutters */
+    max-width: min(1400px, 95vw) !important;
+  }
+  /* some themes wrap with an inner container—inherit the width if present */
+  .notion :global(.notion-page-content-inner) {
+    max-width: inherit !important;
+  }
+}
+
+/* Keep your current card width, just allow more columns + a bit more spacing */
+@media (min-width: 1200px) {
+  .notion :global(.notion-gallery-view .notion-gallery-grid) {
+    /* keep the same min card width you liked before (280px); increase gap a touch */
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)) !important;
+    gap: 32px !important;
+  }
+}
+
+/* Ultra-wide: give a little more breathing room */
+@media (min-width: 1536px) {
+  .notion :global(.notion-page-content) {
+    max-width: min(1500px, 92vw) !important;
+  }
+}
