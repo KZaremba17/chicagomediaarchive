@@ -142,6 +142,46 @@ const propertyTextValue = (
   return defaultFn()
 }
 
+/**
+ * Override PageLink:
+ * - For collection (gallery) card titles, render a <span> (no anchor),
+ *   so there is no hover URL or click navigation.
+ * - Elsewhere, use Next.js <Link> as usual.
+ */
+const PageLink: NotionComponents['PageLink'] = ({
+  href,
+  className,
+  children,
+  ...props
+}) => {
+  // react-notion-x adds these classes around card title anchors
+  const isCollectionCardTitle =
+    className?.includes('notion-collection-card-title') ||
+    className?.includes('notion-collection-card') // extra safeguard
+
+  if (isCollectionCardTitle) {
+    return (
+      <span
+        className={
+          className
+            ? className.replace(/\bnotion-page-link\b/, '').trim()
+            : undefined
+        }
+        {...props}
+      >
+        {children}
+      </span>
+    )
+  }
+
+  // Default behavior for all other links
+  return (
+    <Link href={href ?? '#'} className={className} {...(props as any)}>
+      {children}
+    </Link>
+  )
+}
+
 function NotionPage({
   site,
   recordMap,
@@ -165,40 +205,11 @@ function NotionPage({
       Header: NotionPageHeader,
       propertyLastEditedTimeValue,
       propertyTextValue,
-      propertyDateValue
+      propertyDateValue,
+      PageLink // 👈 inject the override
     }),
     []
   )
-
-  // 👉 Block only INTERNAL clicks inside collection cards (gallery entries)
-  React.useEffect(() => {
-    const onClick = (e: MouseEvent) => {
-      const target = e.target as HTMLElement | null
-      if (!target) return
-
-      const card = target.closest('.notion-collection-card')
-      if (!card) return
-
-      const anchor = target.closest('a') as HTMLAnchorElement | null
-      if (!anchor) return
-
-      const href = anchor.getAttribute('href') || ''
-      const isInternal =
-        anchor.classList.contains('notion-page-link') ||
-        href.startsWith('/') ||
-        href.includes('notion.so') ||
-        href.includes('notion.site') ||
-        href.includes(window.location.hostname)
-
-      if (isInternal) {
-        e.preventDefault()
-        e.stopPropagation()
-      }
-    }
-
-    document.addEventListener('click', onClick, true)
-    return () => document.removeEventListener('click', onClick, true)
-  }, [pageId])
 
   // lite mode is for oembed
   const isLiteMode = lite === 'true'
@@ -288,7 +299,7 @@ function NotionPage({
         darkMode={isDarkMode}
         components={{
           ...components
-          // NOTE: no PageLink override here; JS effect handles only card titles
+          // NOTE: PageLink override disables gallery card title anchors
         }}
         recordMap={recordMap}
         rootPageId={s.rootNotionPageId}
