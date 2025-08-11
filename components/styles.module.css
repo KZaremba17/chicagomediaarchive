@@ -87,37 +87,14 @@
   transition: color 50ms ease-out;
 }
 
-.toggleDarkMode:hover {
-  color: #2795e9;
-}
-
-.twitter:hover {
-  color: #2795e9;
-}
-
-.mastodon:hover {
-  color: #5a4be1;
-}
-
-.zhihu:hover {
-  color: #0066ff;
-}
-
-.github:hover {
-  color: #c9510c;
-}
-
-.youtube:hover {
-  color: #ff0000;
-}
-
-.linkedin:hover {
-  color: #0077b5;
-}
-
-.newsletter:hover {
-  color: #777777;
-}
+.toggleDarkMode:hover { color: #2795e9; }
+.twitter:hover { color: #2795e9; }
+.mastodon:hover { color: #5a4be1; }
+.zhihu:hover { color: #0066ff; }
+.github:hover { color: #c9510c; }
+.youtube:hover { color: #ff0000; }
+.linkedin:hover { color: #0077b5; }
+.newsletter:hover { color: #777777; }
 
 .comments {
   width: 100%;
@@ -126,23 +103,11 @@
 }
 
 @media only screen and (max-width: 566px) {
-  .footer {
-    flex-direction: column;
-  }
-
-  .footer > div {
-    margin-top: 1em;
-  }
-
-  .footer .settings {
-    order: 1;
-  }
-  .footer .social {
-    order: 2;
-  }
-  .footer .copyright {
-    order: 3;
-  }
+  .footer { flex-direction: column; }
+  .footer > div { margin-top: 1em; }
+  .footer .settings { order: 1; }
+  .footer .social { order: 2; }
+  .footer .copyright { order: 3; }
 }
 
 .pageActions {
@@ -163,110 +128,41 @@
   transition: all 250ms ease-out;
 }
 
-.pageActions a:last-of-type {
-  margin-right: 0;
-}
-
-.pageActions a:hover {
-  transition: all 50ms ease-out;
-}
-
-.likeTweet:hover {
-  background: #f6e3e8;
-  color: #e0265e;
-}
-
-.retweet:hover {
-  color: #19bf64;
-  background: #e5f2e8;
-}
+.pageActions a:last-of-type { margin-right: 0; }
+.pageActions a:hover { transition: all 50ms ease-out; }
+.likeTweet:hover { background: #f6e3e8; color: #e0265e; }
+.retweet:hover { color: #19bf64; background: #e5f2e8; }
 
 @media (max-width: 1360px) {
-  .githubCorner {
-    display: none;
-  }
+  .githubCorner { display: none; }
 }
 
-.githubCorner:hover .octoArm {
-  animation: octocat-wave 560ms ease-in-out;
-}
+.githubCorner:hover .octoArm { animation: octocat-wave 560ms ease-in-out; }
 
 @keyframes octocat-wave {
-  0%,
-  100% {
-    transform: rotate(0);
-  }
-  20%,
-  60% {
-    transform: rotate(-25deg);
-  }
-  40%,
-  80% {
-    transform: rotate(10deg);
-  }
+  0%, 100% { transform: rotate(0); }
+  20%, 60% { transform: rotate(-25deg); }
+  40%, 80% { transform: rotate(10deg); }
 }
 
 @media (max-width: 500px) {
-  .githubCorner:hover .octoArm {
-    animation: none;
-  }
-
-  .githubCorner .octoArm {
-    animation: octocat-wave 560ms ease-in-out;
-  }
+  .githubCorner:hover .octoArm { animation: none; }
+  .githubCorner .octoArm { animation: octocat-wave 560ms ease-in-out; }
 }
 
-.hidden {
-  visibility: hidden;
-}
-/* 1) Make all internal page links inside collection cards unclickable */
-.notion-collection .notion-gallery .notion-collection-card a.notion-page-link,
-.notion-collection .notion-list    .notion-collection-card a.notion-page-link,
-.notion-collection .notion-table   .notion-collection-card a.notion-page-link {
-  pointer-events: none;
-  cursor: default;
-  text-decoration: none;
-  color: inherit;
-}
+.hidden { visibility: hidden; }
 
-/* 2) Keep external links inside cards clickable (e.g., Amazon) */
-.notion-collection .notion-collection-card a.notion-link {
-  pointer-events: auto;
-  cursor: pointer;
-  text-decoration: underline;
-}
+/* ------------------------------------------------------------------ */
+/* Notion collection link behavior (scoped for CSS Modules)           */
+/* ------------------------------------------------------------------ */
 
-/* Optional belt-and-suspenders:
-   Disable any link inside a card whose href looks internal (starts with "/"),
-   then re-enable absolute http(s) links. */
-.notion-collection .notion-collection-card a[href^="/"] {
-  pointer-events: none;
-  cursor: default;
-  text-decoration: none;
-}
-.notion-collection .notion-collection-card a[href^="http"] {
-  pointer-events: auto;
-  cursor: pointer;
-}
-/* Disable clicking the entire card */
-.notion-collection .notion-gallery .notion-collection-card,
-.notion-collection .notion-list    .notion-collection-card,
-.notion-collection .notion-table   .notion-collection-card {
-  pointer-events: none;
-}
-
-/* Re-enable clicks for external links inside the card */
-.notion-collection .notion-collection-card a.notion-link,
-.notion-collection .notion-collection-card a[href^="http"] {
-  pointer-events: auto;
-}
-/* Kill ONLY internal links inside gallery cards (covers whole-card links + titles) */
-.notion-collection.notion-gallery .notion-collection-card a.notion-page-link,
-.notion-collection.notion-gallery .notion-collection-card > a.notion-page-link,
-.notion-collection.notion-gallery .notion-collection-card a[href^="/"],
-.notion-collection.notion-gallery .notion-collection-card a[href^="https://www.notion.so"],
-.notion-collection.notion-gallery .notion-collection-card a[href^="https://notion.site"],
-.notion-collection.notion-gallery .notion-collection-card a[href^="https://chicagomediaarchive.com"] {
+/* Kill ONLY internal page links inside gallery cards (covers + titles) */
+.notion :global(.notion-collection.notion-gallery .notion-collection-card a.notion-page-link),
+.notion :global(.notion-collection.notion-gallery .notion-collection-card > a.notion-page-link),
+.notion :global(.notion-collection.notion-gallery .notion-collection-card a[href^="/"]),
+.notion :global(.notion-collection.notion-gallery .notion-collection-card a[href*="notion.so"]),
+.notion :global(.notion-collection.notion-gallery .notion-collection-card a[href*="notion.site"]),
+.notion :global(.notion-collection.notion-gallery .notion-collection-card a[href*="chicagomediaarchive.com"]) {
   pointer-events: none !important;
   cursor: default !important;
   text-decoration: none !important;
@@ -274,58 +170,38 @@
 }
 
 /* Re-enable external links inside gallery cards (e.g., Amazon) */
-.notion-collection.notion-gallery .notion-collection-card a[href^="http"]:not([href*="notion.so"]):not([href*="notion.site"]):not([href*="chicagomediaarchive.com"]) {
+.notion :global(.notion-collection.notion-gallery .notion-collection-card a[href^="http"]:not([href*="notion.so"]):not([href*="notion.site"]):not([href*="chicagomediaarchive.com"])) {
   pointer-events: auto !important;
   cursor: pointer !important;
   text-decoration: underline;
 }
-/* --- Force multi‑column gallery layout --- */
 
-/* The grid wrapper for gallery cards */
-.notion :global(.notion-collection.notion-collection-gallery .notion-gallery-grid) {
-  display: grid; /* make sure it's a grid */
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); /* responsive columns */
-  gap: 24px; /* spacing between cards */
-}
+/* ------------------------------------------------------------------ */
+/* Notion gallery grid (responsive columns)                            */
+/* ------------------------------------------------------------------ */
 
-/* Prevent any theme reset from forcing cards to full width */
-.notion :global(.notion-collection-card) {
-  width: auto;
-}
-
-/* Optional: bump columns up on larger screens */
-@media (min-width: 1024px) {
-  .notion :global(.notion-collection.notion-collection-gallery .notion-gallery-grid) {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-@media (min-width: 1440px) {
-  .notion :global(.notion-collection.notion-collection-gallery .notion-gallery-grid) {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-}
-/* base: responsive auto grid */
-:global(.notion-gallery-view .notion-gallery-grid) {
+.notion :global(.notion-gallery-view .notion-gallery-grid) {
   display: grid !important;
   gap: 24px !important;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)) !important;
 }
 
-/* tablet: ensure at least 2 columns */
+/* Prevent any theme reset from forcing cards full width */
+.notion :global(.notion-collection-card) { width: auto !important; }
+
+/* Optional breakpoints for extra control */
 @media (min-width: 768px) {
-  :global(.notion-gallery-view .notion-gallery-grid) {
+  .notion :global(.notion-gallery-view .notion-gallery-grid) {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
   }
 }
-
-/* large screens: 3–4 columns */
 @media (min-width: 1024px) {
-  :global(.notion-gallery-view .notion-gallery-grid) {
+  .notion :global(.notion-gallery-view .notion-gallery-grid) {
     grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
   }
 }
 @media (min-width: 1440px) {
-  :global(.notion-gallery-view .notion-gallery-grid) {
+  .notion :global(.notion-gallery-view .notion-gallery-grid) {
     grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
   }
 }
