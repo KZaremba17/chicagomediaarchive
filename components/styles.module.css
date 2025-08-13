@@ -251,3 +251,28 @@
     max-width: min(1500px, 92vw) !important;
   }
 }
+/* Remove hover highlight from Notion collection cards (gallery/list/table) */
+.notion :global(.notion-collection-card) {
+  /* set the resting look once */
+  --card-shadow: 0 1px 6px rgba(0,0,0,.06); /* tweak if you prefer */
+  box-shadow: var(--card-shadow) !important;
+  background-color: var(--bg-color) !important;
+  transition: none !important;
+}
+
+.notion :global(.notion-collection-card:hover),
+.notion :global(.notion-collection-card:focus-within),
+.notion :global(.notion-collection-card:active) {
+  /* keep the same values on hover/focus/active */
+  box-shadow: var(--card-shadow) !important;
+  background-color: var(--bg-color) !important;
+  transform: none !important;
+  filter: none !important;
+}
+
+/* If your cover image zooms/fades on hover, kill that too */
+.notion :global(.notion-collection-card-cover img),
+.notion :global(.notion-collection-card:hover .notion-collection-card-cover img) {
+  transform: none !important;
+  opacity: 1 !important;
+}
