@@ -251,10 +251,12 @@
     max-width: min(1500px, 92vw) !important;
   }
 }
-/* Remove hover highlight from Notion collection cards (gallery/list/table) */
+/* ------------------------------------------------------------------ */
+/* Remove hover highlight from Notion collection cards                */
+/* ------------------------------------------------------------------ */
 .notion :global(.notion-collection-card) {
-  /* set the resting look once */
-  --card-shadow: 0 1px 6px rgba(0,0,0,.06); /* tweak if you prefer */
+  /* resting look */
+  --card-shadow: 0 1px 6px rgba(0,0,0,.06);
   box-shadow: var(--card-shadow) !important;
   background-color: var(--bg-color) !important;
   transition: none !important;
@@ -263,18 +265,22 @@
 .notion :global(.notion-collection-card:hover),
 .notion :global(.notion-collection-card:focus-within),
 .notion :global(.notion-collection-card:active) {
-  /* keep the same values on hover/focus/active */
+  /* keep same on hover/focus/active */
   box-shadow: var(--card-shadow) !important;
   background-color: var(--bg-color) !important;
   transform: none !important;
   filter: none !important;
 }
 
-/* If your cover image zooms/fades on hover, kill that too */
-.notion :global(.notion-collection-card-cover img),
+/* Kill cover-image hover effects explicitly (no comma-joined selector) */
+.notion :global(.notion-collection-card-cover img) {
+  transform: none !important;
+  opacity: 1 !important;
+}
 .notion :global(.notion-collection-card:hover .notion-collection-card-cover img) {
   transform: none !important;
   opacity: 1 !important;
+}
 /* Desktop+: widen the central content area and force 3 columns */
 @media (min-width: 1200px) {
   .notion :global(.notion-page-content),
