@@ -16,8 +16,10 @@ const NAV_LINKS: NavLink[] = [
 export default function TopNav() {
   const { asPath } = useRouter()
 
-  // Always a definite string (SSR-safe)
-  const safePath: string = (asPath ?? '').split('?')[0]
+  // Always produce a definite string and avoid array indexing (TS-safe with noUncheckedIndexedAccess)
+  const fullPath = typeof asPath === 'string' ? asPath : ''
+  const qIndex = fullPath.indexOf('?')
+  const safePath: string = qIndex === -1 ? fullPath : fullPath.slice(0, qIndex)
 
   const homeActive = safePath === '/'
 
