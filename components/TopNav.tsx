@@ -1,6 +1,5 @@
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { useMemo } from 'react'
 import cs from 'classnames'
 import styles from './TopNav.module.css'
 
@@ -17,13 +16,8 @@ const NAV_LINKS: NavLink[] = [
 export default function TopNav() {
   const { asPath } = useRouter()
 
-  // Always a string, even during SSR
-  const safePath: string = useMemo(() => {
-    if (typeof asPath === 'string' && asPath.length > 0) {
-      return asPath.split('?')[0]
-    }
-    return ''
-  }, [asPath])
+  // Always a definite string (SSR-safe)
+  const safePath: string = (asPath ?? '').split('?')[0]
 
   const homeActive = safePath === '/'
 
