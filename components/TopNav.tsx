@@ -1,6 +1,6 @@
+import cs from 'classnames'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import cs from 'classnames'
 import styles from './TopNav.module.css'
 
 type NavLink = { href: string; label: string; match?: 'exact' | 'startsWith' }
@@ -16,7 +16,7 @@ const NAV_LINKS: NavLink[] = [
 export default function TopNav() {
   const { asPath } = useRouter()
 
-  // Always produce a definite string and avoid array indexing (TS-safe with noUncheckedIndexedAccess)
+  // Always produce a definite string and avoid array indexing (strict TS safe)
   const fullPath = typeof asPath === 'string' ? asPath : ''
   const qIndex = fullPath.indexOf('?')
   const safePath: string = qIndex === -1 ? fullPath : fullPath.slice(0, qIndex)
