@@ -275,4 +275,36 @@
 .notion :global(.notion-collection-card:hover .notion-collection-card-cover img) {
   transform: none !important;
   opacity: 1 !important;
+  /* Desktop+: widen the central content area so a 3rd column fits */
+@media (min-width: 1200px) {
+  /* The main content column */
+  .notion :global(.notion-page-content),
+  .notion :global(.notion-page-content-inner) {
+    max-width: none !important;
+    width: min(1600px, 95vw) !important; /* use more of the viewport */
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  /* Some themes cap an outer frame—lift that cap just in case */
+  .notion :global(.notion-frame) {
+    max-width: none !important;
+  }
+
+  /* Keep your current card width, but guarantee 3 columns on desktop */
+  .notion :global(.notion-gallery-view .notion-gallery-grid) {
+    grid-template-columns: repeat(3, minmax(280px, 1fr)) !important;
+    gap: 32px !important; /* a touch more breathing room between cards */
+  }
 }
+
+/* Ultra-wide screens: allow 4 columns and a bit more width */
+@media (min-width: 1536px) {
+  .notion :global(.notion-page-content),
+  .notion :global(.notion-page-content-inner) {
+    width: min(1800px, 92vw) !important;
+  }
+  .notion :global(.notion-gallery-view .notion-gallery-grid)) {
+    grid-template-columns: repeat(4, minmax(280px, 1fr)) !important;
+  }
+}}
