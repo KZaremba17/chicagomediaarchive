@@ -17,10 +17,15 @@ const NAV_LINKS: NavLink[] = [
 export default function TopNav() {
   const { asPath } = useRouter()
 
-  // Guard for SSR / types — always a string
-  const path = useMemo(() => (asPath ?? '').split('?')[0], [asPath])
+  // Always a string, even during SSR
+  const safePath: string = useMemo(() => {
+    if (typeof asPath === 'string' && asPath.length > 0) {
+      return asPath.split('?')[0]
+    }
+    return ''
+  }, [asPath])
 
-  const homeActive = path === '/'
+  const homeActive = safePath === '/'
 
   return (
     <nav className={styles.nav} aria-label="Primary">
@@ -35,7 +40,7 @@ export default function TopNav() {
 
         {NAV_LINKS.map(({ href, label, match = 'startsWith' }) => {
           const active =
-            match === 'exact' ? path === href : path.startsWith(href)
+            match === 'exact' ? safePath === href : safePath.startsWith(href)
 
           return (
             <Link
