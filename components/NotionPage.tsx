@@ -317,8 +317,7 @@ function NotionPage({
         mapPageUrl={siteMapPageUrl}
         mapImageUrl={mapImageUrl}
         searchNotion={config.isSearchEnabled ? searchNotion : undefined}
-        pageAside={pageAside}
-        footer={footer}
+  pageAside={isBlogPost ? pageAside : undefined}        footer={footer}
       />
 
       <GitHubShareButton />
