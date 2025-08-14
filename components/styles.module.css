@@ -312,3 +312,7 @@
     grid-template-columns: repeat(4, minmax(280px, 1fr)) !important;
   }
 }
+/* Center the content row if anything else meddles with it */
+.notion :global(.notion-page-content) {
+  justify-content: center !important;
+}
