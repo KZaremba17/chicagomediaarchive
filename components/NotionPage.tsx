@@ -29,6 +29,7 @@ import { NotionPageHeader } from './NotionPageHeader'
 import { Page404 } from './Page404'
 import { PageAside } from './PageAside'
 import { PageHead } from './PageHead'
+import TopNav from './TopNav' // ⬅️ NEW
 import styles from './styles.module.css'
 
 // -----------------------------------------------------------------------------
@@ -90,13 +91,10 @@ const Modal = dynamic(
   () =>
     import('react-notion-x/build/third-party/modal').then((m) => {
       m.Modal.setAppElement('.notion-viewport')
-      return m.Modol
+      return m.Modal
     }),
   { ssr: false }
 )
-
-// NOTE: fix typo above if copy/pasting; correct return is m.Modal (leaving as-is if already correct in your repo).
-// If you see a build error here, change "m.Modol" to "m.Modal".
 
 function Tweet({ id }: { id: string }) {
   const { recordMap } = useNotionContext()
@@ -225,12 +223,11 @@ function NotionPage({
   const keys = Object.keys(recordMap?.block || {})
   const block = recordMap?.block?.[keys[0]!]?.value
 
-  // "Blog post" = a page that lives inside a Notion collection (your original heuristic)
+  // "Blog post" = a page inside a Notion collection
   const isBlogPost =
     block?.type === 'page' && block?.parent_table === 'collection'
 
-  // Detect if the page contains any collection views (gallery/list/table).
-  // If it does, we treat it like a "content page" without an aside gutter.
+  // Detect if this page contains any collection views (gallery/list/table)
   const containsCollection = React.useMemo(() => {
     const blocks = Object.values(recordMap?.block ?? {}) as any[]
     return blocks.some((b) => {
@@ -239,7 +236,7 @@ function NotionPage({
     })
   }, [recordMap])
 
-  // Only show an aside/TOC for true blog posts (and not for pages with gallery listings)
+  // Only show an aside/TOC for true blog posts (never for gallery pages)
   const hasAside = isBlogPost && !containsCollection
 
   const showTableOfContents = hasAside
@@ -303,6 +300,9 @@ function NotionPage({
 
       {isLiteMode && <BodyClassName className='notion-lite' />}
       {isDarkMode && <BodyClassName className='dark-mode' />}
+
+      {/* ⬇️ Persistent top navigation */}
+      <TopNav />
 
       <NotionRenderer
         bodyClassName={cs(
