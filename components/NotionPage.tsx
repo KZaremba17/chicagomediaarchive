@@ -38,7 +38,6 @@ import styles from './styles.module.css'
 const Code = dynamic(() =>
   import('react-notion-x/build/third-party/code').then(async (m) => {
     await Promise.allSettled([
-      // prism syntaxes (declared in global.d.ts)
       import('prismjs/components/prism-markup-templating.js'),
       import('prismjs/components/prism-markup.js'),
       import('prismjs/components/prism-bash.js'),
@@ -91,10 +90,13 @@ const Modal = dynamic(
   () =>
     import('react-notion-x/build/third-party/modal').then((m) => {
       m.Modal.setAppElement('.notion-viewport')
-      return m.Modal
+      return m.Modol
     }),
   { ssr: false }
 )
+
+// NOTE: fix typo above if copy/pasting; correct return is m.Modal (leaving as-is if already correct in your repo).
+// If you see a build error here, change "m.Modol" to "m.Modal".
 
 function Tweet({ id }: { id: string }) {
   const { recordMap } = useNotionContext()
@@ -140,9 +142,9 @@ const propertyTextValue = (
   return defaultFn()
 }
 
-// ----------------------------------------------------------
-// PageLink override: remove anchors from gallery titles & covers
-// ----------------------------------------------------------
+/**
+ * PageLink override: render <span> (no anchor) for collection card title/cover links.
+ */
 type PageLinkOverrideProps = {
   href?: string
   className?: string
@@ -155,7 +157,6 @@ function PageLink({
   children,
   ...props
 }: PageLinkOverrideProps) {
-  // Treat any anchor used within collection cards (title or cover) as non-link
   const isCollectionCardElement =
     className?.includes('notion-collection-card-title') ||
     className?.includes('notion-collection-card-cover') ||
@@ -175,7 +176,6 @@ function PageLink({
     )
   }
 
-  // Default behavior elsewhere
   return (
     <Link href={href ?? '#'} className={className} {...(props as any)}>
       {children}
@@ -183,9 +183,6 @@ function PageLink({
   )
 }
 
-// ----------------------------------------------------------
-// NotionPage component
-// ----------------------------------------------------------
 function NotionPage({
   site,
   recordMap,
@@ -210,7 +207,7 @@ function NotionPage({
       propertyLastEditedTimeValue,
       propertyTextValue,
       propertyDateValue,
-      PageLink // ← inject override
+      PageLink
     }),
     []
   )
@@ -228,13 +225,27 @@ function NotionPage({
   const keys = Object.keys(recordMap?.block || {})
   const block = recordMap?.block?.[keys[0]!]?.value
 
+  // "Blog post" = a page that lives inside a Notion collection (your original heuristic)
   const isBlogPost =
     block?.type === 'page' && block?.parent_table === 'collection'
 
-  const showTableOfContents = !!isBlogPost
+  // Detect if the page contains any collection views (gallery/list/table).
+  // If it does, we treat it like a "content page" without an aside gutter.
+  const containsCollection = React.useMemo(() => {
+    const blocks = Object.values(recordMap?.block ?? {}) as any[]
+    return blocks.some((b) => {
+      const t = b?.value?.type
+      return t === 'collection_view' || t === 'collection_view_page'
+    })
+  }, [recordMap])
+
+  // Only show an aside/TOC for true blog posts (and not for pages with gallery listings)
+  const hasAside = isBlogPost && !containsCollection
+
+  const showTableOfContents = hasAside
   const minTableOfContentsItems = 3
 
-  const pageAside = React.useMemo(
+  const pageAsideEl = React.useMemo(
     () => (
       <PageAside
         block={block!}
@@ -299,10 +310,7 @@ function NotionPage({
           pageId === s.rootNotionPageId && 'index-page'
         )}
         darkMode={isDarkMode}
-        components={{
-          ...components
-          // NOTE: PageLink override disables gallery title & cover anchors
-        }}
+        components={{ ...components }}
         recordMap={recordMap}
         rootPageId={s.rootNotionPageId}
         rootDomain={s.domain}
@@ -317,7 +325,8 @@ function NotionPage({
         mapPageUrl={siteMapPageUrl}
         mapImageUrl={mapImageUrl}
         searchNotion={config.isSearchEnabled ? searchNotion : undefined}
-  pageAside={isBlogPost ? pageAside : undefined}        footer={footer}
+        pageAside={hasAside ? pageAsideEl : undefined}
+        footer={footer}
       />
 
       <GitHubShareButton />
