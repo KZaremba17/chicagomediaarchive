@@ -337,3 +337,32 @@
     display: none !important;
   }
 }
+/* Center the entire Notion page wrapper (the class applied via bodyClassName) */
+.notion {
+  /* widen + center the main content block */
+  max-width: min(1600px, 95vw) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+@media (min-width: 1536px) {
+  .notion {
+    max-width: min(1800px, 92vw) !important;
+  }
+}
+
+/* Let the scroller stretch; the centered wrapper above controls width */
+.notion :global(.notion-page-scroller) {
+  align-items: stretch !important;   /* was centering children oddly */
+}
+
+/* Ensure inner content uses the wrapper width and doesn't add extra gutters */
+.notion :global(.notion-page-content),
+.notion :global(.notion-page-content-inner) {
+  max-width: none !important;
+  width: 100% !important;
+  margin: 0 auto !important;
+  padding-right: 0 !important;
+}
