@@ -316,3 +316,24 @@
 .notion :global(.notion-page-content) {
   justify-content: center !important;
 }
+/* Center the main content row across all pages */
+.notion :global(.notion-page-scroller) {
+  /* react-notion-x uses a flex row; force the single column to sit centered */
+  display: flex !important;
+  justify-content: center !important;
+}
+
+/* Give both the breadcrumb and the content the same centered container */
+.notion :global(.notion-breadcrumb),
+.notion :global(.notion-page-content) {
+  max-width: min(1600px, 95vw) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* On pages that have a gallery/list/table, remove any right aside entirely */
+@supports selector(:has(*)) {
+  .notion :global(.notion-page:has(.notion-gallery-view) .notion-aside) {
+    display: none !important;
+  }
+}
