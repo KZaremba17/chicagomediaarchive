@@ -9,7 +9,7 @@ type NavLink = { href: string; label: string; match?: 'exact' | 'startsWith' }
 const NAV_LINKS: NavLink[] = [
   { href: '/books-set-in-chicago', label: 'Books' },
   { href: '/movies-set-in-chicago', label: 'Movies' },
-{ href: '/tv-shows-set-in-chicago', label: 'TV Shows' },
+{ href: '/tv-series-set-in-chicago', label: 'TV Shows' },
   { href: '/music-inspired-by-chicago', label: 'Music' },
   // { href: '/tv-shows-set-in-chicago', label: 'TV Shows' },
   // { href: '/albums-set-in-chicago', label: 'Albums' },
