@@ -1,18 +1,19 @@
-// Side-effect style imports (keep at top)
+// Side-effect style imports (keep at top, alphabetical)
 import 'katex/dist/katex.min.css'
 import 'prismjs/themes/prism-coy.css'
 import 'react-notion-x/src/styles.css'
 import 'styles/global.css'
-// import 'prismjs/themes/prism-okaidia.css' // optional dark theme
 import 'styles/notion.css'
 import 'styles/prism-theme.css'
 
-// External packages (alphabetical by module path)
+// External packages (values first, alphabetical by module path)
 import * as Fathom from 'fathom-client'
-import type { AppProps } from 'next/app'
-import { useRouter } from 'next/router'
 import { posthog } from 'posthog-js'
+import { useRouter } from 'next/router'
 import * as React from 'react'
+
+// External packages (types)
+import type { AppProps } from 'next/app'
 
 // Internal (alias) imports (alphabetical by path)
 import Header from '@/components/Header'
