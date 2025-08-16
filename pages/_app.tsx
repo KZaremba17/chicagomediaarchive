@@ -1,3 +1,4 @@
+/* eslint-disable simple-import-sort/imports */
 // External packages (values, alphabetical)
 import * as Fathom from 'fathom-client'
 import { posthog } from 'posthog-js'
