@@ -28,6 +28,9 @@ import {
   posthogId
 } from '@/lib/config'
 
+// ✅ NEW: import your header component
+import Header from '@/components/Header'
+
 if (!isServer) {
   bootstrap()
 }
@@ -61,5 +64,11 @@ export default function App({ Component, pageProps }: AppProps) {
     }
   }, [router.events])
 
-  return <Component {...pageProps} />
+  // ✅ Render Header above all pages
+  return (
+    <>
+      <Header />
+      <Component {...pageProps} />
+    </>
+  )
 }
