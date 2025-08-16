@@ -10,8 +10,8 @@ import 'styles/prism-theme.css'
 // External packages (alphabetical by module path)
 import * as Fathom from 'fathom-client'
 import type { AppProps } from 'next/app'
-import { posthog } from 'posthog-js'
 import { useRouter } from 'next/router'
+import { posthog } from 'posthog-js'
 import * as React from 'react'
 
 // Internal (alias) imports (alphabetical by path)
