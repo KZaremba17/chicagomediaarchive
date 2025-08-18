@@ -383,20 +383,3 @@ a[href="/search"],
 .search {
   display: none !important;
 }
-/* === CMA customization: remove breadcrumbs + search === */
-
-/* Hide Notion/renderer breadcrumbs */
-.notion-breadcrumbs,
-.notion-page-header .notion-breadcrumbs,
-.notion-nav-breadcrumbs {
-  display: none !important;
-}
-
-/* Hide search button/trigger in the top bar */
-button[aria-label="Search"],
-a[href="/search"],
-.notion-search,
-.navbar .search,
-.search {
-  display: none !important;
-}
