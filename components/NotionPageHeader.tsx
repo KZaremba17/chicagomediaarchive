@@ -1,8 +1,10 @@
 // components/NotionPageHeader.tsx
 // Intentionally empty header: we return null to remove breadcrumbs/search/nav.
-// No imports on purpose (avoids simple-import-sort + unused vars).
+// No imports on purpose.
 
-export default function NotionPageHeader(_props: unknown) {
+function NotionPageHeader(_props: unknown) {
   return null;
 }
-export const NotionPageHeader = NotionPageHeader;
+
+export default NotionPageHeader;
+export { NotionPageHeader };
