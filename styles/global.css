@@ -99,9 +99,3 @@ nav[aria-label="Breadcrumbs"] {
   margin-top: 0 !important;
   padding-top: 0 !important;
 }
-/* Keep Notion styles from messing with the header layout */
-header nav, header ul { margin: 0; padding: 0; list-style: none; }
-header nav a { display: inline-block; text-decoration: none; }
-
-/* Make sure page content never overlaps the header */
-body #__next header { position: relative; z-index: 1000; }
