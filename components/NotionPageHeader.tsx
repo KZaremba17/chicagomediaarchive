@@ -5,3 +5,4 @@
 export default function NotionPageHeader(_props: unknown) {
   return null;
 }
+export const NotionPageHeader = NotionPageHeader;
