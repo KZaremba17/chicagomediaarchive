@@ -60,3 +60,12 @@ body {
 ::-webkit-scrollbar-track {           
     background-color: var(--bg-color);
 }
+/* Hide breadcrumbs and search bar */
+.breadcrumb,
+.notion-search,
+button[aria-label="Search"],
+a[href="/search"],
+.navbar .search,
+.search {
+  display: none !important;
+}
