@@ -30,7 +30,6 @@ import { NotionPageHeader } from './NotionPageHeader'
 import { Page404 } from './Page404'
 import { PageAside } from './PageAside'
 import { PageHead } from './PageHead'
-import TopNav from './TopNav'
 import styles from './styles.module.css'
 
 // -----------------------------------------------------------------------------
@@ -301,9 +300,6 @@ function NotionPage({
 
       {isLiteMode && <BodyClassName className='notion-lite' />}
       {isDarkMode && <BodyClassName className='dark-mode' />}
-
-      {/* Persistent top navigation */}
-      <TopNav />
 
       <NotionRenderer
         bodyClassName={cs(
