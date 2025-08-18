@@ -11,7 +11,7 @@ export default function Header() {
       style={{
         position: 'sticky',
         top: 0,
-        zIndex: 50,
+        zIndex: 100,
         background: '#fff',
         borderBottom: '1px solid #eee',
         padding: '10px 16px'
