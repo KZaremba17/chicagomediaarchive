@@ -1,50 +1,67 @@
 // components/Header.tsx
-// Uses Next.js <Image fill> to preserve aspect ratio (no squishing)
-// Make sure your logo file exists at: /public/logo-cma-square.png
-
-import Image from 'next/image'
-import Link from 'next/link'
+import Image from "next/image";
+import Link from "next/link";
 
 export default function Header() {
   return (
     <header
-      style={{
-        position: 'sticky',
-        top: 0,
-        zIndex: 100,
-        background: '#fff',
-        borderBottom: '1px solid #eee',
-        padding: '10px 16px'
-      }}
+      className="relative z-[1000] isolate w-full border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80"
+      role="banner"
     >
-      <div
-        style={{
-          maxWidth: 1100,
-          margin: '0 auto',
-          display: 'flex',
-          alignItems: 'center'
-        }}
-      >
-        <Link href="/" aria-label="Chicago Media Archive — home" style={{ display: 'inline-flex' }}>
-          {/* Wrapper must be position:relative with explicit size for <Image fill> */}
-          <span
-            style={{
-              position: 'relative',
-              width: 160,   // adjust to taste (e.g., 140–200)
-              height: 64    // controls visual height; image scales to fit without distortion
-            }}
-          >
-            <Image
-              src="/logo-cma-square.png" // <-- put your PNG here
-              alt="Chicago Media Archive"
-              fill
-              priority
-              style={{ objectFit: 'contain' }} // keep proportions, no crop
-              sizes="160px" // hint for responsive loading; update if you change width
-            />
-          </span>
-        </Link>
+      <div className="mx-auto max-w-7xl px-4">
+        <div className="flex h-16 items-center justify-between">
+          {/* Logo (square). Ensure /public/logo.png exists. */}
+          <Link href="/" aria-label="Chicago Media Archive" className="block">
+            <div className="relative h-10 w-10">
+              <Image
+                src="/logo.png"
+                alt="Chicago Media Archive"
+                fill
+                sizes="40px"
+                priority
+              />
+            </div>
+          </Link>
+
+          {/* Primary Nav */}
+          <nav aria-label="Primary">
+            <ul className="flex items-center gap-6 text-sm font-medium">
+              <li>
+                <Link
+                  href="/books-set-in-chicago"
+                  className="inline-block px-1 py-1 hover:underline"
+                >
+                  Books
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/movies-set-in-chicago"
+                  className="inline-block px-1 py-1 hover:underline"
+                >
+                  Movies
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/tv-series-set-in-chicago"
+                  className="inline-block px-1 py-1 hover:underline"
+                >
+                  TV Shows
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/music-inspired-by-chicago"
+                  className="inline-block px-1 py-1 hover:underline"
+                >
+                  Music
+                </Link>
+              </li>
+            </ul>
+          </nav>
+        </div>
       </div>
     </header>
-  )
+  );
 }
