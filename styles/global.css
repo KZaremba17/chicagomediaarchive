@@ -69,3 +69,33 @@ a[href="/search"],
 .search {
   display: none !important;
 }
+/* === CMA: remove the Notion header strip entirely === */
+
+/* Nuke the full header row under your sticky logo */
+.notion-page-header,
+.notion-nav-header,
+nav[aria-label="Breadcrumbs"] {
+  display: none !important;
+  height: 0 !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: 0 !important;
+}
+
+/* If any wrapper still reserves space, collapse it too */
+.notion-header,
+.notion-header .notion-breadcrumbs,
+.notion-page-header + * {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+/* Make sure the page content starts right away */
+.notion,
+.notion-page,
+.notion-frame,
+.notion-page-content {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
